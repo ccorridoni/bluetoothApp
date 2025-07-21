@@ -1,75 +1,44 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+document.addEventListener("DOMContentLoaded", init, false);
 
-// Wait for the deviceready event before using any of Cordova's device APIs.
-document.addEventListener('deviceready', onDeviceReady, false);
-
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    //document.getElementById('deviceready').classList.add('ready');
-
-    // **FIX APPLIED HERE**
-    // We now use the ble object to check for permissions and start the scan.
-    // This removes the need for the conflicting cordova-plugin-android-permissions plugin.
-    //checkBluetoothAndScan();
-    navigator.bluetooth.requestDevice({ acceptAllDevices: true })
-     .then(device => console.log(device))
-     .catch(error => console.log(error));
+function init() {
+    const scanBtn = document.getElementById("scanBtn");
+    scanBtn.addEventListener("click", scanBLE);
 }
 
-function checkBluetoothAndScan() {
-    console.log('Checking Bluetooth status...');
-    // The ble.enable function will prompt the user to turn on Bluetooth if it's off.
-    // It also handles the necessary runtime permissions on Android.
-    ble.enable(
-        function() {
-            console.log("Bluetooth is enabled");
-            startBLEScan();
-        },
-        function() {
-            console.log("The user refused to enable Bluetooth");
-            alert("Bluetooth is required to use this feature.");
-        }
-    );
+function scanBLE() {
+    const deviceList = document.getElementById("deviceList");
+    deviceList.innerHTML = "<li>Scanning...</li>";
+
+    if (window.ble && typeof ble.scan === "function") {
+        // Native BLE (Cordova)
+        ble.scan([], 5, 
+            function (device) {
+                addDevice(device.name || "Unnamed", device.id);
+            },
+            function (error) {
+                deviceList.innerHTML = `<li>Scan failed: ${error}</li>`;
+            }
+        );
+    } else if (navigator.bluetooth) {
+        // Fallback: Web Bluetooth API
+        navigator.bluetooth.requestDevice({
+            acceptAllDevices: true
+        })
+        .then(device => {
+            addDevice(device.name || "Unnamed", device.id);
+        })
+        .catch(error => {
+            deviceList.innerHTML = `<li>Web Bluetooth error: ${error}</li>`;
+        });
+    } else {
+        deviceList.innerHTML = "<li>BLE not supported in this environment.</li>";
+    }
 }
 
-
-// Start BLE scanning
-function startBLEScan() {
-    console.log('Starting BLE scan...');
-    const scanLog = document.getElementById('scanLog'); // Assuming you have an element with this ID in your HTML
-    scanLog.innerHTML = 'Scanning for devices...<br>';
-
-    // Scan for 5 seconds for any device
-    ble.scan([], 5, 
-        function(device) {
-            // Success callback for each device found
-            console.log('Found device:', JSON.stringify(device));
-            let deviceName = device.name || 'Unnamed';
-            scanLog.innerHTML += 'Found: ' + deviceName + ' (' + device.id + ')<br>';
-        }, 
-        function(error) {
-            // Failure callback
-            console.error('BLE scan error:', error);
-            alert('Scan failed: ' + JSON.stringify(error));
-        }
-    );
+function addDevice(name, id) {
+    const deviceList = document.getElementById("deviceList");
+    const item = document.createElement("li");
+    item.textContent = `${name} (${id})`;
+    deviceList.appendChild(item);
 }
 
