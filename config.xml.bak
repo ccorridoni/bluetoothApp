@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.onesky.bluetoothapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>BluetoothApp</name>
+    <description>Sample Apache Cordova App</description>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <platform name="ios">
+        <edit-config target="NSBluetoothAlwaysUsageDescription" file="*-Info.plist" mode="merge">
+        <string>We need Bluetooth access to scan nearby devices.</string>
+        </edit-config>
+    </platform>
+    <platform name="android">
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest">
+        <uses-permission android:name="android.permission.BLUETOOTH" tools:node="replace" />
+        <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" tools:node="replace" />
+    </edit-config>
+    </platform>
+</widget>

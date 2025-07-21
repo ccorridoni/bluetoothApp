@@ -1,0 +1,11 @@
+// This file allows us to override specific Android build configurations.
+
+// We are explicitly setting the versions for key components to ensure consistency.
+ext.cdvCompileSdkVersion = 35
+ext.cdvBuildToolsVersion = "35.0.0"
+
+// This forces the build to use a specific, stable version of the Google Material
+// Components library, which is the source of the 'windowOptOutEdgeToEdgeEnforcement' error.
+dependencies {
+    implementation 'com.google.android.material:material:1.9.0'
+}

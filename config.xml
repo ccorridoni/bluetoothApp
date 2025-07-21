@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.onesky.bluetoothapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>BluetoothApp</name>
+    <description>
+        A Cordova app for scanning and connecting to Bluetooth devices.
+    </description>
+    <author email="ccorridoni@oneskysystems.com" href="https://www.oneskysysytems.com">
+        Chris Corridoni
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <preference name="android-targetSdkVersion" value="34" />
+        <preference name="android-minSdkVersion" value="23" />
+        <preference name="AndroidXAppCompatVersion" value="1.6.1" />
+        <resource-file src="build-extras.gradle" target="app/build-extras.gradle" />
+    </platform>
+    <platform name="ios">
+	<preference name="deployment-target" value="12.0" />
+        <edit-config file="*-Info.plist" mode="merge" target="NSBluetoothAlwaysUsageDescription">
+            <string>Bluetooth access is required to discover and connect to nearby devices.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Location access is needed to scan for Bluetooth devices.</string>
+        </edit-config>
+    </platform>
+    <plugin name="cordova-plugin-ble-central" source="npm" />
+    <preference name="ScrollEnabled" value="false" />
+    <preference name="android-usesCleartextTraffic" value="true" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="SplashScreenDelay" value="2000" />
+    <preference name="FadeSplashScreenDuration" value="500" />
+</widget>
