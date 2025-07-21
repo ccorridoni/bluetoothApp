@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "BluetoothApp",
+  "short_name": "BluetoothApp",
+  "version": "com.onesky.bluetoothapp",
+  "description": "A Cordova app for scanning and connecting to Bluetooth devices.",
+  "author": "Chris Corridoni",
+  "icons": [],
+  "start_url": "index.html"
+}
