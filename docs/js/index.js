@@ -9,17 +9,7 @@ function scanBLE() {
     const deviceList = document.getElementById("deviceList");
     deviceList.innerHTML = "<li>Scanning...</li>";
 
-    if (window.ble && typeof ble.scan === "function") {
-        // Native BLE (Cordova)
-        ble.scan([], 5, 
-            function (device) {
-                addDevice(device.name || "Unnamed", device.id);
-            },
-            function (error) {
-                deviceList.innerHTML = `<li>Scan failed: ${error}</li>`;
-            }
-        );
-    } else if (navigator.bluetooth) {
+    if (navigator.bluetooth) {
         // Fallback: Web Bluetooth API
         navigator.bluetooth.requestDevice({
             acceptAllDevices: true
